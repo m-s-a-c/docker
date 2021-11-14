@@ -1,0 +1,150 @@
+{
+    "family": "abc-prod",
+    "executionRoleArn": "arn:aws:iam::AWSID:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::AWSID:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "server-node",
+            "image": "{{image-node}}",
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                  "name": "ALERT_POST_URL",
+                  "value": "https://ABC"
+                },
+                {
+                  "name": "API_2_PDF_API_KEY",
+                  "value": "ABC"
+                },
+                {
+                  "name": "NODE_CONSUMER_KEY",
+                  "value": "ABC"
+                },
+                {
+                  "name": "NODE_CONSUMER_SECRET",
+                  "value": "ABC"
+                },
+                {
+                  "name": "NODE_ENV",
+                  "value": "production"
+                },
+                {
+                  "name": "NODE_PATH",
+                  "value": "./src"
+                },
+                {
+                  "name": "REACT_APP_TALK_JS_APP_ID",
+                  "value": "ABC"
+                },
+                {
+                  "name": "REACT_APP_TALK_JS_TOKEN",
+                  "value": "ABC"
+                },
+                {
+                  "name": "SSL",
+                  "value": "false"
+                }
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/abc-prod",
+                    "awslogs-region": "region",
+                     "awslogs-stream-prefix": "ecs"
+                }
+            }
+        },
+        {
+            "name": "abc-xero",
+            "image": "{{image-xero}}",
+            "portMappings": [
+                {
+                    "containerPort": 3009,
+                    "protocol": "tcp"
+                }
+            ],
+            "entryPoint": [
+                "node",
+                "bin/www"
+            ],
+            "environment": [
+                {
+                  "name": "CLIENT_ID",
+                  "value": "DAD1EE014AF64D44A2562CDE2096C6F6"
+                },
+                {
+                  "name": "CLIENT_SECRET",
+                  "value": "uk7u3RTllLLvb4bixxG5NBe6Rvp8HtlcjfENAdOPT2nyZob5"
+                },
+                {
+                  "name": "REDIRECT_URI",
+                  "value": "https://back.abc.com.au/xero-callback"
+                },
+                {
+                  "name": "SCOPES",
+                  "value": "abc"
+                }
+            ],
+	    "mountPoints": [
+              	{
+                  "containerPath": "/usr/app/bin/",
+                  "sourceVolume": "abc-Xero-EFS"
+              	}
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/abc-prod",
+                    "awslogs-region": "region",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        },
+        {
+            "name": "abc-redis",
+            "image": "{{image-redis}}",
+            "portMappings": [
+                {
+                    "containerPort": 6379,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/abc-prod",
+                    "awslogs-region": "region",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "volumes": [
+      {
+        "efsVolumeConfiguration": {
+          "fileSystemId": "fs-93c2bfab",
+          "authorizationConfig": {
+            "iam": "ENABLED"
+          },
+          "transitEncryption": "ENABLED",
+          "rootDirectory": "/prod/bin"
+        },
+        "name": "abc-Xero-EFS"
+      }
+    ]
+}
+

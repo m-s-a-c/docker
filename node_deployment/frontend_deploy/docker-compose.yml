@@ -1,0 +1,15 @@
+version: '2'
+services:
+  node:
+    build:
+      context: ./
+      dockerfile: ./docker/node/Dockerfile-${DOCKER_MODE}
+      # args:
+      #  - ENV=${NODE_ENV}
+    container_name: fabulate-admin
+    ports:
+      - 3001:80
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json

@@ -1,0 +1,32 @@
+# This is a sample build configuration for Other.
+# Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:2
+
+pipelines:
+  branches:
+    dev:      
+      - step:
+          name: Welcome
+          script: 
+            - echo "Deploying"            
+      - step:
+          name: Deploy
+          trigger: manual
+          deployment: test
+          script:
+            - ssh user@35.204.112.101 'cd /home/user/projects/abc-server/ && ./deploy.sh && exit' 
+    master:      
+      - step:
+          name: Welcome
+          script: 
+            - echo "Deploying"            
+      - step:
+          name: Deploy
+          trigger: manual
+          deployment: production
+          script:
+            - ssh user@52.64.84.188 'cd /home/user/master/server/ && ./deploy.sh && exit'
+

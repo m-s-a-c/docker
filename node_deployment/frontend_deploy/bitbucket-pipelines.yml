@@ -1,0 +1,51 @@
+# This is a sample build configuration for Other.
+# Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:10.15.1
+
+pipelines:
+  branches:
+    dev:      
+      - step:
+          name: Welcome
+          script: 
+            - echo "Deploying"            
+      - step:
+          name: Deploy
+          trigger: manual
+          deployment: test
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run build
+            - ssh user@ip 'cd /home/user/projects/abc-admin/ && ./deploy.sh && exit' 
+            - scp -r build user@ip:/home/user/projects/abc-admin/ 
+      - step:
+          name: Restore backup
+          trigger: manual
+          script:
+            - ssh user@ip 'cd /home/user/projects/abc-admin/ && ./restore.sh && exit'
+    master:      
+      - step:
+          name: Welcome
+          script: 
+            - echo "Deploying"            
+      - step:
+          name: Deploy
+          trigger: manual
+          deployment: production
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run build
+            - ssh user@ip 'cd /home/user/master/admin/ && ./deploy.sh && exit' 
+            - scp -r build user@ip:/home/user/master/admin/ 
+      - step:
+          name: Restore backup
+          trigger: manual
+          script:
+            - ssh user@ip 'cd /home/user/master/admin/ && ./restore.sh && exit'
