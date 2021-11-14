@@ -1,0 +1,27 @@
+global:
+    resolve_timeout: 5m
+
+route:
+    group_by: ['alertname', 'cluster', 'service']
+    group_wait: 5s
+    group_interval: 5m
+    repeat_interval: 1h        
+    receiver: 'alerts-development'
+
+receivers:
+    - name: 'alerts-development'
+      slack_configs:
+        - send_resolved: true
+          text: "{{ .CommonAnnotations.description }}"
+          username: 'Development Server Alerts'
+          channel: '#dev-server-alerts'
+          api_url: 'https://hooks.slack.com/services/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'
+          title: "{{ range .Alerts }}{{ .Annotations.title }}\n{{ .Annotations.summary }}\n{{ end }}"
+      email_configs:
+        - to: mohd.shahnawaz@unthinkable.co
+          from: mohd.shahnawaz@unthinkable.co
+          smarthost: smtp.gmail.com:587
+          auth_username: mohd.shahnawaz@unthinkable.co
+          auth_identity: mohd.shahnawaz@unthinkable.co
+          auth_password: fcruwtvcbmpfvdet   
+          send_resolved: true

@@ -1,0 +1,102 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'docker-host-alpha'
+
+
+################################################################################
+################################################################################
+## Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - "alert.rules"
+
+
+################################################################################
+################################################################################
+## Alerting specifies settings related to the Alertmanager
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets: 
+      - '13.237.175.186:9093'
+      - '52.63.218.112:9093'
+        #alerting:
+        #alertmanagers:
+        #- scheme: http
+        #  static_configs:
+        #- targets:
+        #- '52.63.218.112:9093'
+
+
+################################################################################
+################################################################################        
+## A scrape configuration containing exactly one endpoint to scrape.
+scrape_configs:
+
+  #########################
+  ## Monitoring Instance ##
+  #########################
+
+  - job_name: 'Monitor_Node'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['13.237.175.186:9100']
+        labels:
+            group: 'monitor'
+  - job_name: 'Monitor_Node_jenkins'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['52.63.218.112:9100']
+        labels:
+            group: 'monitor'
+
+  - job_name: 'Monitor_Prom'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['13.237.175.186:9090']
+        labels:
+            group: 'monitor'
+  
+  - job_name: 'Monitor_Prom_jenkins'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['52.63.218.112:9090']
+        labels:
+            group: 'monitor'
+  
+  # - job_name: 'Monitor_CAdvisor'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #     - targets: ['13.237.175.186:8080']
+  #       group: 'monitor'
+
+
+  ##########################
+  ## Development Instance ##
+  ##########################
+      
+  - job_name: 'Dev_CAdvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['3.106.82.83:8080']
+        labels:
+            group: 'development'
+
+  - job_name: 'Dev_Node'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['3.106.82.83:9100']
+        labels:
+            group: 'development'
+
+  - job_name: 'Dev_API_Response'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['3.106.82.83:3030']
+        labels:
+            group: 'development'
