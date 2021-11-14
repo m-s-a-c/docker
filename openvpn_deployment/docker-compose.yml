@@ -1,0 +1,28 @@
+#version: '2'
+#services:
+#  openvpn:
+#    cap_add:
+#     - NET_ADMIN
+#       #    build: ./docker/vpn/       
+#    image: kylemanna/openvpn:2.3
+#    container_name: openvpn
+#    ports:
+#     - "443:1194/udp"
+#    restart: always
+#    volumes:
+#     - ./openvpn-data/conf:/etc/openvpn
+#     - ./openvpn/bin:/usr/local/bin
+#     - ./openvpn/otp:/etc/pam.d/
+
+version: '2'
+services:
+  openvpn:
+    cap_add:
+     - NET_ADMIN
+    image: kylemanna/openvpn:2.3
+    container_name: openvpn
+    ports:
+     - "1194:1194/udp"
+    restart: always
+    volumes:
+     - ./openvpn-data/conf:/etc/openvpn
