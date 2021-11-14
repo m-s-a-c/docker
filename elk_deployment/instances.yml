@@ -1,0 +1,23 @@
+instances:
+  - name: es01
+    dns:
+      - es01 
+      - localhost
+      - 13.237.175.186
+    ip:
+      - 13.237.175.186
+
+  - name: es02
+    dns:
+      - es02
+      - localhost
+      - 13.237.175.186
+    ip:
+      - 13.237.175.186
+      
+  - name: 'kib01'
+    dns: 
+      - kib01
+      - localhost
+
+
